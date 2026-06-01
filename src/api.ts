@@ -21,11 +21,11 @@ const buildCandidates = () => {
   if (typeof window !== "undefined") {
     const { protocol, hostname, port } = window.location;
     candidates.push(`${protocol}//${hostname}${port ? `:${port}` : ""}`);
-    for (let p = 3000; p <= 3010; p += 1) {
+    for (let p = 3000; p <= 3020; p += 1) {
       candidates.push(`${protocol}//${hostname}:${p}`);
     }
     candidates.push(`http://127.0.0.1:3000`);
-    for (let p = 3001; p <= 3010; p += 1) {
+    for (let p = 3001; p <= 3020; p += 1) {
       candidates.push(`http://127.0.0.1:${p}`);
     }
     // Hosted backends (e.g. HF Space). Keep them after same-origin so a co-hosted
