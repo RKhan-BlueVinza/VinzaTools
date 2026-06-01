@@ -193,6 +193,38 @@ export const MediaflowDownloader = ({
     }).catch(() => undefined);
   };
 
+  const buildFallbackInfo = (cleanedUrl: string, nextTitle?: string): MediaInfo => {
+    const title = nextTitle?.trim() || 'Media file';
+    const encodedUrl = encodeURIComponent(cleanedUrl);
+    const encodedTitle = encodeURIComponent(title);
+
+    return {
+      title,
+      thumbnail: fallbackThumb,
+      author: '',
+      duration: undefined,
+      formats: [
+        {
+          quality: 'Best available',
+          container: 'mp4',
+          url: `/api/media/download?url=${encodedUrl}&mode=video&title=${encodedTitle}`,
+          itag: 'server-fallback',
+          hasAudio: true,
+          hasVideo: true,
+        },
+      ],
+      audioFormats: [
+        {
+          quality: 'Best available',
+          container: 'mp3',
+          url: `/api/media/download?url=${encodedUrl}&mode=audio&title=${encodedTitle}`,
+          itag: 'server-fallback',
+        },
+      ],
+      downloadUrl: undefined,
+    };
+  };
+
   const handleFetch = async () => {
     if (!url || !activeTool) return;
 
@@ -206,9 +238,15 @@ export const MediaflowDownloader = ({
       activeTool === 'youtube' ? normalizeYoutubeUrl(url) || url.trim() : url.trim();
 
     try {
-      const response = await apiFetch(
-        `/api/${activeTool}/info?url=${encodeURIComponent(cleanedUrl)}`
-      );
+      const controller = new AbortController();
+      const timeoutId = window.setTimeout(() => controller.abort(), 12_000);
+
+      const response = await apiFetch(`/api/${activeTool}/info?url=${encodeURIComponent(cleanedUrl)}`, {
+        signal: controller.signal,
+      });
+
+      window.clearTimeout(timeoutId);
+
       const payload = await response.json().catch(() => null);
 
       if (!response.ok) {
@@ -247,9 +285,14 @@ export const MediaflowDownloader = ({
         tool: activeTool,
       });
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to fetch media information.'
-      );
+      let message = err instanceof Error ? err.message : 'Failed to fetch media information.';
+      if (err instanceof Error && err.name === 'AbortError') {
+        message = 'Format detection is taking longer than expected. Using the fast download fallback.';
+      }
+      // If providers are blocked or the request takes too long, still offer a reliable server-side download.
+      setUrl(cleanedUrl);
+      setMediaInfo(buildFallbackInfo(cleanedUrl, 'Media download'));
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -302,75 +345,17 @@ export const MediaflowDownloader = ({
         'vinzatools-media'
       )}.${extension}`;
 
-      // For our own API routes, fetch the file first so the browser saves the actual
-      // merged media instead of trying to open a streaming response in a new tab.
-      if (href.includes('/api/')) {
-        const response = await fetch(href);
-        if (!response.ok) {
-          throw new Error('Download request failed');
-        }
-        const totalBytes = Number(response.headers.get('content-length') || 0);
+      // Important: do NOT buffer large media in the browser (can crash mobile + blank the page).
+      // Let the server stream the file with Content-Disposition so the download starts normally.
+      const anchor = document.createElement('a');
+      anchor.href = href;
+      anchor.target = '_blank';
+      anchor.rel = 'noopener noreferrer';
+      anchor.download = downloadName;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
 
-        let blob: Blob;
-        if (response.body) {
-          const reader = response.body.getReader();
-          const chunks: Uint8Array[] = [];
-          let receivedBytes = 0;
-
-          setDownloadFeedback({
-            formatKey,
-            label,
-            status: 'downloading',
-            progress: totalBytes > 0 ? 0 : null,
-          });
-
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            if (!value) continue;
-            chunks.push(value);
-            receivedBytes += value.length;
-
-            setDownloadFeedback({
-              formatKey,
-              label,
-              status: 'downloading',
-              progress:
-                totalBytes > 0
-                  ? Math.max(1, Math.min(100, Math.round((receivedBytes / totalBytes) * 100)))
-                  : null,
-            });
-          }
-
-          blob = new Blob(chunks);
-        } else {
-          blob = await response.blob();
-          setDownloadFeedback({
-            formatKey,
-            label,
-            status: 'downloading',
-            progress: null,
-          });
-        }
-
-        const objectUrl = URL.createObjectURL(blob);
-        const anchor = document.createElement('a');
-        anchor.href = objectUrl;
-        anchor.download = downloadName;
-        document.body.appendChild(anchor);
-        anchor.click();
-        anchor.remove();
-        URL.revokeObjectURL(objectUrl);
-      } else {
-        const anchor = document.createElement('a');
-        anchor.href = href;
-        anchor.target = '_blank';
-        anchor.rel = 'noopener noreferrer';
-        anchor.download = downloadName;
-        document.body.appendChild(anchor);
-        anchor.click();
-        anchor.remove();
-      }
       setDownloadFeedback({
         formatKey,
         label,

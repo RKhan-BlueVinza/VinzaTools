@@ -1,8 +1,33 @@
-<svg width="400" height="225" viewBox="0 0 400 225" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="400" height="225" rx="24" fill="#100809"/>
-  <circle cx="310" cy="54" r="42" fill="#F43F5E" fill-opacity="0.22"/>
-  <rect x="34" y="34" width="332" height="157" rx="18" fill="#26161A" stroke="#412127"/>
-  <polygon points="170,94 170,132 226,113" fill="#FFF7F9" fill-opacity="0.92"/>
-  <text x="34" y="212" fill="#FDA4AF" font-size="18" font-family="Segoe UI, Arial, sans-serif" font-weight="700">VinzaTools Media Preview</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1b0d10" />
+      <stop offset="1" stop-color="#0f0a0a" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fb7185" />
+      <stop offset="1" stop-color="#fb923c" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)" />
+  <rect x="72" y="72" width="1056" height="531" rx="42" fill="#ffffff" opacity="0.05" />
+  <rect x="96" y="96" width="1008" height="483" rx="34" fill="#000000" opacity="0.18" />
+  <rect x="96" y="96" width="1008" height="8" rx="4" fill="url(#accent)" opacity="0.65" />
+  <g fill="none" stroke="#ffffff" opacity="0.14">
+    <path d="M144 528c86-78 172-117 258-117 129 0 191 101 316 101 108 0 170-66 274-66 42 0 84 10 128 30" stroke-width="18" stroke-linecap="round"/>
+    <path d="M176 214h348" stroke-width="16" stroke-linecap="round"/>
+    <path d="M176 268h276" stroke-width="16" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(820 220)">
+    <rect width="260" height="180" rx="28" fill="#ffffff" opacity="0.07"/>
+    <path d="M108 60l78 40-78 40z" fill="url(#accent)" opacity="0.9"/>
+    <circle cx="130" cy="100" r="54" stroke="#ffffff" opacity="0.16" stroke-width="12"/>
+  </g>
+  <text x="176" y="372" fill="#ffffff" opacity="0.8" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="40" font-weight="700">
+    Media Preview
+  </text>
+  <text x="176" y="418" fill="#ffffff" opacity="0.45" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="22">
+    VinzaTools placeholder thumbnail
+  </text>
 </svg>
 

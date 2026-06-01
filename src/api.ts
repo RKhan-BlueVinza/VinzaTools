@@ -1,8 +1,11 @@
-const withTimeout = async (promise: Promise<Response>, ms: number) => {
-  const timeout = new Promise<never>((_, reject) =>
-    setTimeout(() => reject(new Error("timeout")), ms)
-  );
-  return Promise.race([promise, timeout]) as Promise<Response>;
+const fetchWithTimeout = async (url: string, ms: number) => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), ms);
+  try {
+    return await fetch(url, { signal: controller.signal });
+  } finally {
+    clearTimeout(timeoutId);
+  }
 };
 
 const isJsonResponse = (response: Response) =>
@@ -16,7 +19,9 @@ const isHostedFrontend = (hostname: string) =>
 
 const buildCandidates = () => {
   const candidates: string[] = [];
-  if (envBase) candidates.push(envBase.replace(/\/$/, ""));
+  // If VITE_API_BASE is set, use it directly. Probing dozens of localhost ports
+  // can delay the first request by ~30s on cold starts (and makes tools feel broken).
+  if (envBase) return [envBase];
 
   if (typeof window !== "undefined") {
     const { protocol, hostname, port } = window.location;
@@ -44,7 +49,8 @@ export const resolveApiBase = async () => {
     const candidates = buildCandidates();
     for (const base of candidates) {
       try {
-        const response = await withTimeout(fetch(`${base}/api/health`), 1200);
+        // Give remote backends a bit more time; HF Spaces often need a few seconds to wake up.
+        const response = await fetchWithTimeout(`${base}/api/health`, envBase ? 8_000 : 1_500);
         if (response.ok && isJsonResponse(response)) {
           return base;
         }
@@ -52,6 +58,7 @@ export const resolveApiBase = async () => {
         // try next
       }
     }
+    // If we had an env base, prefer it even if health probing failed (e.g. cold start).
     return envBase || "";
   })();
   return basePromise;

@@ -1018,6 +1018,8 @@ export default function App() {
     setOg('og:description', description);
     setOg('og:type', 'website');
     setOg('og:url', canonicalUrl);
+    setOg('og:image', 'https://vinzatools.com/assets/images/toolora-logo.webp');
+    setOg('og:site_name', 'VinzaTools');
 
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (!canonical) {
