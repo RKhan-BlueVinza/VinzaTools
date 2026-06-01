@@ -271,7 +271,7 @@ export const BackgroundRemover = () => {
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
                         <div className="relative">
                           <div className="absolute -inset-4 bg-gradient-to-r from-rose-600/20 to-pink-600/20 rounded-3xl blur-xl" />
-                          <img src={preview!} className="relative max-h-[350px] rounded-2xl mx-auto shadow-2xl shadow-black/50" />
+                          <img src={preview!} alt="Uploaded image preview" className="relative max-h-[350px] rounded-2xl mx-auto shadow-2xl shadow-black/50" />
                         </div>
                         <div className="flex justify-center gap-4">
                           <button 

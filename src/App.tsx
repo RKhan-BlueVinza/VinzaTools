@@ -1114,11 +1114,11 @@ export default function App() {
     setOg('og:type', 'website');
     setOg('og:url', canonicalUrl);
     setOg('og:site_name', 'VinzaTools');
-    setOg('og:image', 'https://vinzatools.com/assets/images/toolora-logo.png');
+    setOg('og:image', 'https://www.vinzatools.com/assets/images/toolora-logo.png');
     setMeta('twitter:card', 'summary_large_image');
     setMeta('twitter:title', title);
     setMeta('twitter:description', description);
-    setMeta('twitter:image', 'https://vinzatools.com/assets/images/toolora-logo.png');
+    setMeta('twitter:image', 'https://www.vinzatools.com/assets/images/toolora-logo.png');
 
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (!canonical) {
@@ -1171,10 +1171,10 @@ export default function App() {
           {
             '@type': 'WebSite',
             name: 'VinzaTools',
-            url: 'https://vinzatools.com',
+            url: 'https://www.vinzatools.com',
             potentialAction: {
               '@type': 'SearchAction',
-              target: 'https://vinzatools.com/tools?q={search_term_string}',
+              target: 'https://www.vinzatools.com/tools?q={search_term_string}',
               'query-input': 'required name=search_term_string',
             },
           },

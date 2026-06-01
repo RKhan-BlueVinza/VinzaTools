@@ -44,13 +44,68 @@ const getLanUrls = (port: number) => {
   return Array.from(urls);
 };
 
+// Allowed CORS origins — whitelist only known hosts
+const PROD_ORIGINS = new Set(['https://www.vinzatools.com', 'https://vinzatools.com']);
+const isAllowedOrigin = (origin: string | undefined): boolean => {
+  if (!origin) return true; // server-to-server requests have no Origin header
+  if (PROD_ORIGINS.has(origin)) return true;
+  if (/^https:\/\/[a-z0-9-]+\.hf\.space$/.test(origin)) return true;   // HF Space deployments
+  if (/^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(origin)) return true; // Vercel preview URLs
+  if (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return true;
+  return false;
+};
+
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: (origin, callback) => {
+    callback(isAllowedOrigin(origin) ? null : new Error('Not allowed by CORS'), isAllowedOrigin(origin));
+  },
+  credentials: true,
+}));
+app.use((_req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  next();
+});
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Multer setup for file uploads
-const upload = multer({ dest: 'uploads/' });
+// Multer setup for file uploads — 100 MB hard cap per file
+const upload = multer({ dest: 'uploads/', limits: { fileSize: 100 * 1024 * 1024 } });
+
+// Simple in-memory rate limiter (resets on server restart; good enough for abuse prevention)
+const _rateLimitStore = new Map<string, { count: number; resetAt: number }>();
+const _rateLimitCleanup = setInterval(() => {
+  const now = Date.now();
+  for (const [key, val] of _rateLimitStore) {
+    if (now > val.resetAt) _rateLimitStore.delete(key);
+  }
+}, 60_000);
+if (typeof _rateLimitCleanup.unref === 'function') _rateLimitCleanup.unref();
+
+const rateLimit =
+  (maxRequests: number, windowMs: number) =>
+  (req: express.Request, res: express.Response, next: express.NextFunction): void => {
+    const ip =
+      (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ||
+      req.socket.remoteAddress ||
+      'unknown';
+    const now = Date.now();
+    const entry = _rateLimitStore.get(ip);
+    if (!entry || now > entry.resetAt) {
+      _rateLimitStore.set(ip, { count: 1, resetAt: now + windowMs });
+      return next();
+    }
+    entry.count++;
+    if (entry.count > maxRequests) {
+      res.status(429).json({ error: 'Too many requests. Please try again later.' });
+      return;
+    }
+    next();
+  };
 
 // Ensure uploads directory exists
 if (!fs.existsSync('uploads')) {
@@ -2528,13 +2583,17 @@ app.post('/api/usage', async (req, res) => {
   }
 });
 
-// Contact messages
-app.post('/api/contact', async (req, res) => {
+// Contact messages — 5 submissions per IP per minute
+app.post('/api/contact', rateLimit(5, 60_000), async (req, res) => {
   const { name, email, phone, subject, message, category } = req.body || {};
   if (!name || !email || !message) {
     return res
       .status(400)
       .json({ error: 'Name, email, and message are required' });
+  }
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!EMAIL_RE.test(String(email))) {
+    return res.status(400).json({ error: 'Invalid email address' });
   }
 
   try {
@@ -2937,8 +2996,8 @@ app.get('/api/db-viewer/table/:table', requireAdmin, async (req, res) => {
       }
 
       const rows = sqliteDb
-        .prepare(`SELECT * FROM \`${table}\` LIMIT ${limit}`)
-        .all() as any[];
+        .prepare(`SELECT * FROM \`${table}\` LIMIT ?`)
+        .all(limit) as any[];
       const columns = rows.length ? Object.keys(rows[0]) : [];
 
       return res.json({
@@ -2961,7 +3020,8 @@ app.get('/api/db-viewer/table/:table', requireAdmin, async (req, res) => {
     }
 
     const rows = await dbQuery<any[]>(
-      `SELECT * FROM \`${table}\` LIMIT ${limit}`
+      `SELECT * FROM \`${table}\` LIMIT ?`,
+      [limit]
     );
     const columns = rows.length ? Object.keys(rows[0]) : [];
 

@@ -282,12 +282,18 @@ export const DevTools = ({ initialAction, singleView }: DevToolsProps) => {
               
               <div className="flex-1 relative group">
                 <div className="absolute inset-0 bg-gradient-to-b from-rose-500/5 to-transparent rounded-3xl pointer-events-none opacity-0 group-focus-within:opacity-100 transition-opacity" />
-                <textarea 
+                <textarea
                   className="w-full h-full p-6 bg-[#0f0a0a] border-2 border-rose-500/20 rounded-3xl font-mono text-sm text-rose-100 placeholder-rose-400/30 resize-none focus:border-rose-500 focus:shadow-lg focus:shadow-rose-500/10 outline-none transition-all leading-relaxed"
                   placeholder={`Paste your ${action.toUpperCase()} code here...`}
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   spellCheck={false}
+                  onKeyDown={e => {
+                    if (e.ctrlKey && e.key === 'Enter') {
+                      e.preventDefault();
+                      process();
+                    }
+                  }}
                 />
                 {/* Line numbers effect */}
                 <div className="absolute left-0 top-6 bottom-6 w-12 border-r border-rose-500/10 pointer-events-none hidden md:block">
@@ -338,9 +344,12 @@ export const DevTools = ({ initialAction, singleView }: DevToolsProps) => {
                 {action === 'svg-viewer' ? (
                   <div className="h-full bg-[#0f0a0a] border-2 border-rose-500/20 rounded-3xl p-8 flex items-center justify-center overflow-auto">
                     {output ? (
-                      <div 
-                        className="w-full h-full flex items-center justify-center"
-                        dangerouslySetInnerHTML={{ __html: output }} 
+                      <iframe
+                        srcDoc={output}
+                        sandbox=""
+                        title="SVG Preview"
+                        className="w-full h-full"
+                        style={{ border: 'none', background: 'white' }}
                       />
                     ) : (
                       <div className="text-center text-rose-400/30">
@@ -351,14 +360,13 @@ export const DevTools = ({ initialAction, singleView }: DevToolsProps) => {
                   </div>
                 ) : (
                   <div className="h-full relative group">
-                    <textarea 
+                    <textarea
                       className="w-full h-full p-6 bg-[#0a0505] border-2 border-rose-500/20 rounded-3xl font-mono text-sm text-emerald-400 resize-none outline-none transition-all leading-relaxed"
                       value={output}
                       readOnly
                       placeholder="Output will appear here..."
                     />
-                    {/* Code glow effect */}
-                    <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-emerald-500/5 to-transparent pointer-events-none opacity-0 output && 'opacity-100'" />
+                    <div className={`absolute inset-0 rounded-3xl bg-gradient-to-b from-emerald-500/5 to-transparent pointer-events-none transition-opacity ${output ? 'opacity-100' : 'opacity-0'}`} />
                   </div>
                 )}
 
