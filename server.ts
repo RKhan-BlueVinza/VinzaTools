@@ -3785,7 +3785,116 @@ async function startServer() {
   } else {
     app.use(express.static("dist"));
     app.get("*", (req, res) => {
-      res.sendFile(path.resolve("dist/index.html"));
+      const ua = (req.headers["user-agent"] || "").toLowerCase();
+      const isBot =
+        /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|sogou|exabot|facebot|ia_archiver|semrushbot|ahrefsbot|mj12bot/.test(ua);
+
+      if (!isBot) {
+        return res.sendFile(path.resolve("dist/index.html"));
+      }
+
+      const indexPath = path.resolve("dist/index.html");
+      if (!fs.existsSync(indexPath)) {
+        return res.sendFile(indexPath);
+      }
+
+      const html = fs.readFileSync(indexPath, "utf8");
+      const staticContent = `
+<div id="seo-content">
+  <h1>VinzaTools — Free Online File Toolkit | 90+ Tools</h1>
+  <p>VinzaTools provides free browser-based tools for AI background removal, PDF merge, compress and convert, YouTube and TikTok video downloads, image compression, QR code generation, resume building, and developer utilities. No signup required.</p>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/#/tools">All Tools</a>
+    <a href="/#/blog">Blog</a>
+    <a href="/#/about">About</a>
+    <a href="/#/contact">Contact</a>
+    <a href="/#/themes">Shopify Themes</a>
+  </nav>
+  <section>
+    <h2>AI Background Remover — Free Online Tool</h2>
+    <p>Remove background from any image automatically using AI. Works with JPG, PNG, WebP. Instant results, no signup needed. Free AI background remover online.</p>
+    <a href="/#/tools?t=bg-remover">Use Background Remover</a>
+  </section>
+  <section>
+    <h2>PDF Tools — Merge, Compress, Convert PDF Free</h2>
+    <p>Merge multiple PDFs into one, compress PDF size, split PDF pages, rotate PDF, convert PDF to Word, PDF to PowerPoint, PDF to Excel, and more. All PDF tools free online.</p>
+    <a href="/#/tools?t=pdf-merge">Merge PDF</a>
+    <a href="/#/tools?t=pdf-compress">Compress PDF</a>
+    <a href="/#/tools?t=pdf-to-word">PDF to Word</a>
+    <a href="/#/tools?t=pdf-split">Split PDF</a>
+    <a href="/#/tools?t=word-to-pdf">Word to PDF</a>
+    <a href="/#/tools?t=jpg-to-pdf">JPG to PDF</a>
+    <a href="/#/tools?t=pdf-to-jpg">PDF to JPG</a>
+  </section>
+  <section>
+    <h2>YouTube Video Downloader — Free MP4 & MP3</h2>
+    <p>Download YouTube videos in MP4 format or extract audio as MP3. Fast, free YouTube downloader online. Also supports TikTok, Instagram, and Facebook downloads.</p>
+    <a href="/#/tools?t=media-youtube">YouTube Downloader</a>
+    <a href="/#/tools?t=media-tiktok">TikTok Downloader</a>
+    <a href="/#/tools?t=media-instagram">Instagram Downloader</a>
+    <a href="/#/tools?t=media-facebook">Facebook Downloader</a>
+  </section>
+  <section>
+    <h2>Image Tools — Compress, Convert, Resize Images Free</h2>
+    <p>Compress JPG PNG WebP images, convert between formats, resize images, crop images, remove background, flip and rotate images. Free image tools online.</p>
+    <a href="/#/tools?t=image-compressor">Image Compressor</a>
+    <a href="/#/tools?t=image-converter">Image Converter</a>
+    <a href="/#/tools?t=resize-image">Resize Image</a>
+    <a href="/#/tools?t=crop-image">Crop Image</a>
+    <a href="/#/tools?t=bg-remover">Background Remover</a>
+    <a href="/#/tools?t=qr-code-generator">QR Code Generator</a>
+    <a href="/#/tools?t=color-palette-generator">Color Palette Generator</a>
+  </section>
+  <section>
+    <h2>Video & Audio Converter — Free Online</h2>
+    <p>Convert video files to MP4, MOV, WEBM, trim and crop videos, convert to GIF, convert audio to MP3, WAV, AAC. Free online video and audio converter.</p>
+    <a href="/#/tools?t=video-converter">Video Converter</a>
+    <a href="/#/tools?t=mp4-to-mp3">MP4 to MP3</a>
+    <a href="/#/tools?t=video-to-gif">Video to GIF</a>
+    <a href="/#/tools?t=trim-video">Trim Video</a>
+    <a href="/#/tools?t=audio-converter">Audio Converter</a>
+  </section>
+  <section>
+    <h2>Text Tools — Word Counter, Case Converter & More</h2>
+    <p>Free text tools including word and character counter, case converter, slug generator, keyword density checker, and paragraph generator.</p>
+    <a href="/#/tools?t=text-counter">Word Counter</a>
+    <a href="/#/tools?t=case-converter">Case Converter</a>
+    <a href="/#/tools?t=slug-generator">Slug Generator</a>
+    <a href="/#/tools?t=keyword-density-checker">Keyword Density Checker</a>
+    <a href="/#/tools?t=paragraph-generator">Paragraph Generator</a>
+  </section>
+  <section>
+    <h2>Developer Tools — JSON Formatter, Base64, QR Codes</h2>
+    <p>Developer utilities including JSON formatter and validator, code minifier, Base64 encoder/decoder, SVG viewer, URL encoder/decoder, password generator, Google Authenticator TOTP generator.</p>
+    <a href="/#/tools?t=dev-json">JSON Formatter</a>
+    <a href="/#/tools?t=dev-base64">Base64 Encoder</a>
+    <a href="/#/tools?t=password-generator">Password Generator</a>
+    <a href="/#/tools?t=url-encoder">URL Encoder</a>
+  </section>
+  <section>
+    <h2>Creative Tools — Resume Builder, Poster Maker</h2>
+    <p>Build professional ATS-ready resumes, design posters and flyers, create corporate presentations. Free creative tools online.</p>
+    <a href="/#/tools?t=resume-builder">Resume Builder</a>
+    <a href="/#/tools?t=poster-maker">Poster Maker</a>
+    <a href="/#/tools?t=corporate-poster-studio">Corporate Poster Studio</a>
+  </section>
+  <section>
+    <h2>Shopify Themes — Free Download</h2>
+    <p>Download free premium Shopify themes including Bluevinza Corporate Studio, Lumina Editorial Blog, Signature Personal Portfolio, and Vinza Luxury Storefront.</p>
+    <a href="/#/themes">Browse Shopify Themes</a>
+  </section>
+  <footer>
+    <p>VinzaTools — Free online toolkit for everyone. No signup, no account, no limits.</p>
+    <a href="/#/policy">Privacy Policy</a>
+    <a href="/#/terms">Terms &amp; Conditions</a>
+    <a href="/#/cookies">Cookie Policy</a>
+  </footer>
+</div>`;
+
+      const enriched = html.replace('<div id="root">', `<div id="root">${staticContent}`);
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      res.send(enriched);
     });
   }
 

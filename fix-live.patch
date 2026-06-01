@@ -1,0 +1,449 @@
+diff --git a/index.html b/index.html
+index 4daa604..1a2365e 100644
+--- a/index.html
++++ b/index.html
+@@ -3,42 +3,16 @@
+   <head>
+     <meta charset="UTF-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+-    <title>VinzaTools | Background Remover, PDF Tools, and Video Downloaders</title>
+     <meta
+       name="description"
+-      content="VinzaTools gives you background remover, PDF tools, PDF to Word, image converters, and YouTube, Instagram, TikTok, and Facebook download workflows in one clean workspace."
+-    />
+-    <meta
+-      name="keywords"
+-      content="VinzaTools, background remover, PDF tools, PDF to Word, PDF merge, YouTube downloader, Instagram downloader, TikTok downloader, Facebook downloader, image converter, media downloader, theme library"
++      content="VinzaTools: fast file toolkit for background removal, PDF workflows, image utilities, and media downloads."
+     />
+     <meta name="theme-color" content="#0f0a0a" />
+-    <meta property="og:title" content="VinzaTools | Background Remover, PDF Tools, and Video Downloaders" />
+-    <meta
+-      property="og:description"
+-      content="Remove backgrounds, edit PDFs, convert files, and use YouTube, Instagram, TikTok, and Facebook download tools from one clean workspace."
+-    />
+-    <meta property="og:type" content="website" />
+-    <meta property="og:url" content="https://vinzatools.com" />
+-    <link rel="canonical" href="https://vinzatools.com" />
+-    <link rel="icon" type="image/png" href="/assets/images/toolora-logo.png" />
+-    <script type="application/ld+json">
+-      {
+-        "@context": "https://schema.org",
+-        "@type": "WebSite",
+-        "name": "VinzaTools",
+-        "url": "https://vinzatools.com",
+-        "description": "VinzaTools provides background remover, PDF tools, PDF to Word, image converters, and social media download tools in one workspace.",
+-        "potentialAction": {
+-          "@type": "SearchAction",
+-          "target": "https://vinzatools.com/#/tools",
+-          "query-input": "required name=search_term_string"
+-        }
+-      }
+-    </script>
++    <title>VinzaTools</title>
+   </head>
+   <body>
+     <div id="root"></div>
+     <script type="module" src="/src/main.tsx"></script>
+   </body>
+ </html>
++
+diff --git a/package.json b/package.json
+index da5b70e..af26777 100644
+--- a/package.json
++++ b/package.json
+@@ -3,6 +3,9 @@
+   "private": true,
+   "version": "0.0.0",
+   "scripts": {
++    "dev": "node server.mjs",
++    "build": "vite build",
++    "preview": "vite preview --host 0.0.0.0 --port 4173",
+     "start": "node app.js"
+   },
+   "dependencies": {
+@@ -31,6 +34,7 @@
+     "docx": "^9.5.1",
+     "dotenv": "^17.2.3",
+     "express": "^4.21.2",
++    "framer-motion": "^12.35.0",
+     "html-minifier-terser": "^7.2.0",
+     "html-to-image": "^1.11.13",
+     "html2canvas": "^1.4.1",
+diff --git a/public/assets/placeholders/media-thumbnail.svg b/public/assets/placeholders/media-thumbnail.svg
+index ae8d664..ab7812f 100644
+--- a/public/assets/placeholders/media-thumbnail.svg
++++ b/public/assets/placeholders/media-thumbnail.svg
+@@ -1,8 +1,33 @@
+-<svg width="400" height="225" viewBox="0 0 400 225" fill="none" xmlns="http://www.w3.org/2000/svg">
+-  <rect width="400" height="225" rx="24" fill="#100809"/>
+-  <circle cx="310" cy="54" r="42" fill="#F43F5E" fill-opacity="0.22"/>
+-  <rect x="34" y="34" width="332" height="157" rx="18" fill="#26161A" stroke="#412127"/>
+-  <polygon points="170,94 170,132 226,113" fill="#FFF7F9" fill-opacity="0.92"/>
+-  <text x="34" y="212" fill="#FDA4AF" font-size="18" font-family="Segoe UI, Arial, sans-serif" font-weight="700">VinzaTools Media Preview</text>
++<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
++  <defs>
++    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
++      <stop offset="0" stop-color="#1b0d10" />
++      <stop offset="1" stop-color="#0f0a0a" />
++    </linearGradient>
++    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
++      <stop offset="0" stop-color="#fb7185" />
++      <stop offset="1" stop-color="#fb923c" />
++    </linearGradient>
++  </defs>
++  <rect width="1200" height="675" fill="url(#bg)" />
++  <rect x="72" y="72" width="1056" height="531" rx="42" fill="#ffffff" opacity="0.05" />
++  <rect x="96" y="96" width="1008" height="483" rx="34" fill="#000000" opacity="0.18" />
++  <rect x="96" y="96" width="1008" height="8" rx="4" fill="url(#accent)" opacity="0.65" />
++  <g fill="none" stroke="#ffffff" opacity="0.14">
++    <path d="M144 528c86-78 172-117 258-117 129 0 191 101 316 101 108 0 170-66 274-66 42 0 84 10 128 30" stroke-width="18" stroke-linecap="round"/>
++    <path d="M176 214h348" stroke-width="16" stroke-linecap="round"/>
++    <path d="M176 268h276" stroke-width="16" stroke-linecap="round"/>
++  </g>
++  <g transform="translate(820 220)">
++    <rect width="260" height="180" rx="28" fill="#ffffff" opacity="0.07"/>
++    <path d="M108 60l78 40-78 40z" fill="url(#accent)" opacity="0.9"/>
++    <circle cx="130" cy="100" r="54" stroke="#ffffff" opacity="0.16" stroke-width="12"/>
++  </g>
++  <text x="176" y="372" fill="#ffffff" opacity="0.8" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="40" font-weight="700">
++    Media Preview
++  </text>
++  <text x="176" y="418" fill="#ffffff" opacity="0.45" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="22">
++    VinzaTools placeholder thumbnail
++  </text>
+ </svg>
+ 
+diff --git a/public/assets/placeholders/sample-card.svg b/public/assets/placeholders/sample-card.svg
+index 402d814..10f588a 100644
+--- a/public/assets/placeholders/sample-card.svg
++++ b/public/assets/placeholders/sample-card.svg
+@@ -1,8 +1,32 @@
+-<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+-  <rect width="400" height="400" rx="36" fill="#12090B"/>
+-  <circle cx="110" cy="104" r="54" fill="#F43F5E" fill-opacity="0.22"/>
+-  <rect x="56" y="64" width="288" height="272" rx="28" fill="#221216" stroke="#3E2027"/>
+-  <rect x="88" y="96" width="224" height="148" rx="22" fill="#302025"/>
+-  <rect x="112" y="276" width="176" height="18" rx="9" fill="#FFE4E6" fill-opacity="0.18"/>
+-  <text x="108" y="180" fill="#FFF7F9" font-size="28" font-family="Segoe UI, Arial, sans-serif" font-weight="700">Sample</text>
++<svg xmlns="http://www.w3.org/2000/svg" width="900" height="560" viewBox="0 0 900 560">
++  <defs>
++    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
++      <stop offset="0" stop-color="#0f0a0a" />
++      <stop offset="1" stop-color="#1b0d10" />
++    </linearGradient>
++    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
++      <stop offset="0" stop-color="#fb7185" />
++      <stop offset="1" stop-color="#fb923c" />
++    </linearGradient>
++  </defs>
++  <rect width="900" height="560" fill="url(#bg)" />
++  <rect x="54" y="54" width="792" height="452" rx="44" fill="#ffffff" opacity="0.06" />
++  <rect x="82" y="90" width="736" height="18" rx="9" fill="url(#accent)" opacity="0.75" />
++  <g fill="#ffffff" opacity="0.14">
++    <rect x="110" y="154" width="420" height="38" rx="18" />
++    <rect x="110" y="210" width="340" height="26" rx="13" />
++    <rect x="110" y="252" width="290" height="26" rx="13" />
++    <rect x="110" y="318" width="220" height="58" rx="28" opacity="0.22" />
++    <rect x="350" y="318" width="220" height="58" rx="28" opacity="0.12" />
++  </g>
++  <g transform="translate(600 170)">
++    <rect width="188" height="188" rx="42" fill="#000000" opacity="0.24"/>
++    <circle cx="94" cy="94" r="52" fill="none" stroke="url(#accent)" stroke-width="16" opacity="0.85"/>
++    <path d="M94 50v92" stroke="#ffffff" stroke-width="14" stroke-linecap="round" opacity="0.26"/>
++    <path d="M50 94h92" stroke="#ffffff" stroke-width="14" stroke-linecap="round" opacity="0.26"/>
++  </g>
++  <text x="110" y="460" fill="#ffffff" opacity="0.7" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="22">
++    Sample preview card (placeholder)
++  </text>
+ </svg>
++
+diff --git a/src/App.tsx b/src/App.tsx
+index fabe26b..ba5a0e7 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -62,10 +62,10 @@ import { KeywordDensityChecker } from './components/KeywordDensityChecker';
+ import { ShopifyHelper } from './components/ShopifyHelper';
+ import { TextCounter } from './components/TextCounter';
+ import { ParagraphGenerator } from './components/ParagraphGenerator';
+-import { ImageToolkit, type ImageToolkitMode } from './components/ImageToolkit';
+-import { MediaTranscoder, type MediaTranscoderMode } from './components/MediaTranscoder';
+-import { PdfAdvancedTools, type PdfAdvancedMode } from './components/PdfAdvancedTools';
+-import { UtilityConverters, type UtilityMode } from './components/UtilityConverters';
++import type { ImageToolkitMode } from './components/ImageToolkit';
++import type { MediaTranscoderMode } from './components/MediaTranscoder';
++import type { PdfAdvancedMode } from './components/PdfAdvancedTools';
++import type { UtilityMode } from './components/UtilityConverters';
+ import rizwanImage from './assets/images/team-images/rizwan.webp';
+ import type { ToolCategory, PageKey, ContactTab, ShowcaseTab, ToolContext, Tool } from './types/app';
+ import { SiteLayout } from './layouts/SiteLayout';
+@@ -82,6 +82,10 @@ const ImageConverter = React.lazy(() => import('./components/ImageConverter').th
+ const MediaflowDownloader = React.lazy(() => import('./components/MediaflowDownloader').then((m) => ({ default: m.MediaflowDownloader })));
+ const YoutubeThumbnailDownloader = React.lazy(() => import('./components/YoutubeThumbnailDownloader').then((m) => ({ default: m.YoutubeThumbnailDownloader })));
+ const CorporatePosterStudio = React.lazy(() => import('./components/CorporatePosterStudio').then((m) => ({ default: m.CorporatePosterStudio })));
++const ImageToolkit = React.lazy(() => import('./components/ImageToolkit').then((m) => ({ default: m.ImageToolkit })));
++const PdfAdvancedTools = React.lazy(() => import('./components/PdfAdvancedTools').then((m) => ({ default: m.PdfAdvancedTools })));
++const MediaTranscoder = React.lazy(() => import('./components/MediaTranscoder').then((m) => ({ default: m.MediaTranscoder })));
++const UtilityConverters = React.lazy(() => import('./components/UtilityConverters').then((m) => ({ default: m.UtilityConverters })));
+ const HomePage = React.lazy(() => import('./pages/HomePage').then((m) => ({ default: m.HomePage })));
+ const ToolsPage = React.lazy(() => import('./pages/ToolsPage').then((m) => ({ default: m.ToolsPage })));
+ const TeamPage = React.lazy(() => import('./pages/TeamPage').then((m) => ({ default: m.TeamPage })));
+diff --git a/src/api.ts b/src/api.ts
+index f7ee64c..9fa5b37 100644
+--- a/src/api.ts
++++ b/src/api.ts
+@@ -1,21 +1,34 @@
+-const withTimeout = async (promise: Promise<Response>, ms: number) => {
+-  const timeout = new Promise<never>((_, reject) =>
+-    setTimeout(() => reject(new Error("timeout")), ms)
+-  );
+-  return Promise.race([promise, timeout]) as Promise<Response>;
++const fetchWithTimeout = async (url: string, ms: number) => {
++  const controller = new AbortController();
++  const timeoutId = setTimeout(() => controller.abort(), ms);
++  try {
++    return await fetch(url, { signal: controller.signal });
++  } finally {
++    clearTimeout(timeoutId);
++  }
+ };
+ 
+ const isJsonResponse = (response: Response) =>
+   (response.headers.get("content-type") || "").includes("application/json");
+ 
+-const envBase = (import.meta?.env?.VITE_API_BASE as string | undefined)?.trim();
++const envBaseRaw = (import.meta?.env?.VITE_API_BASE as string | undefined)?.trim();
++const envBase = envBaseRaw ? envBaseRaw.replace(/\/$/, "") : "";
+ 
+ const buildCandidates = () => {
+   const candidates: string[] = [];
+-  if (envBase) candidates.push(envBase.replace(/\/$/, ""));
++  // If VITE_API_BASE is set, use it directly. Probing dozens of localhost ports
++  // can delay the first request by ~30s on cold starts (and makes tools feel broken).
++  if (envBase) return [envBase];
+ 
+   if (typeof window !== "undefined") {
+     const { protocol, hostname, port } = window.location;
++
++    // Production safety net: if env vars were not configured on Vercel,
++    // still try the default backend used for vinzatools.com.
++    if (hostname.endsWith("vinzatools.com")) {
++      candidates.push("https://bluevinza-vinzatools-backend.hf.space");
++    }
++
+     candidates.push(`${protocol}//${hostname}${port ? `:${port}` : ""}`);
+     for (let p = 3000; p <= 3010; p += 1) {
+       candidates.push(`${protocol}//${hostname}:${p}`);
+@@ -37,7 +50,8 @@ export const resolveApiBase = async () => {
+     const candidates = buildCandidates();
+     for (const base of candidates) {
+       try {
+-        const response = await withTimeout(fetch(`${base}/api/health`), 1200);
++        // Give remote backends a bit more time; HF Spaces often need a few seconds to wake up.
++        const response = await fetchWithTimeout(`${base}/api/health`, envBase ? 8_000 : 1_500);
+         if (response.ok && isJsonResponse(response)) {
+           return base;
+         }
+@@ -45,6 +59,7 @@ export const resolveApiBase = async () => {
+         // try next
+       }
+     }
++    // If we had an env base, prefer it even if health probing failed (e.g. cold start).
+     return envBase || "";
+   })();
+   return basePromise;
+diff --git a/src/components/MediaflowDownloader.tsx b/src/components/MediaflowDownloader.tsx
+index dca4fb7..ad30124 100644
+--- a/src/components/MediaflowDownloader.tsx
++++ b/src/components/MediaflowDownloader.tsx
+@@ -193,6 +193,38 @@ export const MediaflowDownloader = ({
+     }).catch(() => undefined);
+   };
+ 
++  const buildFallbackInfo = (cleanedUrl: string, nextTitle?: string): MediaInfo => {
++    const title = nextTitle?.trim() || 'Media file';
++    const encodedUrl = encodeURIComponent(cleanedUrl);
++    const encodedTitle = encodeURIComponent(title);
++
++    return {
++      title,
++      thumbnail: fallbackThumb,
++      author: '',
++      duration: undefined,
++      formats: [
++        {
++          quality: 'Best available',
++          container: 'mp4',
++          url: `/api/media/download?url=${encodedUrl}&mode=video&title=${encodedTitle}`,
++          itag: 'server-fallback',
++          hasAudio: true,
++          hasVideo: true,
++        },
++      ],
++      audioFormats: [
++        {
++          quality: 'Best available',
++          container: 'mp3',
++          url: `/api/media/download?url=${encodedUrl}&mode=audio&title=${encodedTitle}`,
++          itag: 'server-fallback',
++        },
++      ],
++      downloadUrl: undefined,
++    };
++  };
++
+   const handleFetch = async () => {
+     if (!url || !activeTool) return;
+ 
+@@ -206,9 +238,15 @@ export const MediaflowDownloader = ({
+       activeTool === 'youtube' ? normalizeYoutubeUrl(url) || url.trim() : url.trim();
+ 
+     try {
+-      const response = await apiFetch(
+-        `/api/${activeTool}/info?url=${encodeURIComponent(cleanedUrl)}`
+-      );
++      const controller = new AbortController();
++      const timeoutId = window.setTimeout(() => controller.abort(), 12_000);
++
++      const response = await apiFetch(`/api/${activeTool}/info?url=${encodeURIComponent(cleanedUrl)}`, {
++        signal: controller.signal,
++      });
++
++      window.clearTimeout(timeoutId);
++
+       const payload = await response.json().catch(() => null);
+ 
+       if (!response.ok) {
+@@ -247,9 +285,14 @@ export const MediaflowDownloader = ({
+         tool: activeTool,
+       });
+     } catch (err) {
+-      setError(
+-        err instanceof Error ? err.message : 'Failed to fetch media information.'
+-      );
++      let message = err instanceof Error ? err.message : 'Failed to fetch media information.';
++      if (err instanceof Error && err.name === 'AbortError') {
++        message = 'Format detection is taking longer than expected. Using the fast download fallback.';
++      }
++      // If providers are blocked or the request takes too long, still offer a reliable server-side download.
++      setUrl(cleanedUrl);
++      setMediaInfo(buildFallbackInfo(cleanedUrl, 'Media download'));
++      setError(message);
+     } finally {
+       setLoading(false);
+     }
+@@ -302,75 +345,17 @@ export const MediaflowDownloader = ({
+         'vinzatools-media'
+       )}.${extension}`;
+ 
+-      // For our own API routes, fetch the file first so the browser saves the actual
+-      // merged media instead of trying to open a streaming response in a new tab.
+-      if (href.includes('/api/')) {
+-        const response = await fetch(href);
+-        if (!response.ok) {
+-          throw new Error('Download request failed');
+-        }
+-        const totalBytes = Number(response.headers.get('content-length') || 0);
+-
+-        let blob: Blob;
+-        if (response.body) {
+-          const reader = response.body.getReader();
+-          const chunks: Uint8Array[] = [];
+-          let receivedBytes = 0;
+-
+-          setDownloadFeedback({
+-            formatKey,
+-            label,
+-            status: 'downloading',
+-            progress: totalBytes > 0 ? 0 : null,
+-          });
+-
+-          while (true) {
+-            const { done, value } = await reader.read();
+-            if (done) break;
+-            if (!value) continue;
+-            chunks.push(value);
+-            receivedBytes += value.length;
+-
+-            setDownloadFeedback({
+-              formatKey,
+-              label,
+-              status: 'downloading',
+-              progress:
+-                totalBytes > 0
+-                  ? Math.max(1, Math.min(100, Math.round((receivedBytes / totalBytes) * 100)))
+-                  : null,
+-            });
+-          }
+-
+-          blob = new Blob(chunks);
+-        } else {
+-          blob = await response.blob();
+-          setDownloadFeedback({
+-            formatKey,
+-            label,
+-            status: 'downloading',
+-            progress: null,
+-          });
+-        }
++      // Important: do NOT buffer large media in the browser (can crash mobile + blank the page).
++      // Let the server stream the file with Content-Disposition so the download starts normally.
++      const anchor = document.createElement('a');
++      anchor.href = href;
++      anchor.target = '_blank';
++      anchor.rel = 'noopener noreferrer';
++      anchor.download = downloadName;
++      document.body.appendChild(anchor);
++      anchor.click();
++      anchor.remove();
+ 
+-        const objectUrl = URL.createObjectURL(blob);
+-        const anchor = document.createElement('a');
+-        anchor.href = objectUrl;
+-        anchor.download = downloadName;
+-        document.body.appendChild(anchor);
+-        anchor.click();
+-        anchor.remove();
+-        URL.revokeObjectURL(objectUrl);
+-      } else {
+-        const anchor = document.createElement('a');
+-        anchor.href = href;
+-        anchor.target = '_blank';
+-        anchor.rel = 'noopener noreferrer';
+-        anchor.download = downloadName;
+-        document.body.appendChild(anchor);
+-        anchor.click();
+-        anchor.remove();
+-      }
+       setDownloadFeedback({
+         formatKey,
+         label,
+diff --git a/src/pages/HomePage.tsx b/src/pages/HomePage.tsx
+index 93dbaf8..56df143 100644
+--- a/src/pages/HomePage.tsx
++++ b/src/pages/HomePage.tsx
+@@ -75,8 +75,8 @@ export const HomePage = ({
+   showcaseTabsVisible,
+   showcaseFiltered,
+   openSubTool,
+-  devSubtools,
+-  mediaSubtools,
++  devSubtools = [],
++  mediaSubtools = [],
+   goTools,
+ }: HomePageProps) => {
+   const [activeCard, setActiveCard] = useState<number | null>(null);
+diff --git a/vite.config.ts b/vite.config.ts
+index 74a05a2..5772fa4 100644
+--- a/vite.config.ts
++++ b/vite.config.ts
+@@ -11,6 +11,9 @@ export default defineConfig(({mode}) => {
+       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
+     },
+     build: {
++      // Avoid preloading huge vendor chunks (PDF/canvas/AI) on the home page.
++      // This improves Mobile LCP and reduces "unused JS" warnings in Lighthouse.
++      modulePreload: false,
+       sourcemap: false,
+       rollupOptions: {
+         output: {

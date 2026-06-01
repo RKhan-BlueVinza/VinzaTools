@@ -3,16 +3,159 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VinzaTools | Background Remover, PDF Tools & Video Downloader</title>
     <meta
       name="description"
-      content="VinzaTools: fast file toolkit for background removal, PDF workflows, image utilities, and media downloads."
+      content="VinzaTools — free online toolkit for AI background removal, PDF merge/compress/convert, YouTube & TikTok video downloads, image compression, QR code generator, and 90+ more tools."
     />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="VinzaTools" />
     <meta name="theme-color" content="#0f0a0a" />
-    <title>VinzaTools</title>
+    <link rel="canonical" href="https://vinzatools.com/" />
+    <link rel="icon" type="image/png" href="/assets/images/toolora-logo.png" />
+    <link rel="apple-touch-icon" href="/assets/images/toolora-logo.png" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="VinzaTools | Free Online File Toolkit" />
+    <meta property="og:description" content="AI background remover, PDF tools, YouTube downloader, image compressor, QR code generator — 90+ free tools in one clean workspace." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://vinzatools.com/" />
+    <meta property="og:site_name" content="VinzaTools" />
+    <meta property="og:image" content="https://vinzatools.com/assets/images/toolora-logo.webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="VinzaTools | Free Online File Toolkit" />
+    <meta name="twitter:description" content="AI background remover, PDF tools, YouTube downloader, image compressor — 90+ free tools." />
+    <meta name="twitter:image" content="https://vinzatools.com/assets/images/toolora-logo.webp" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "VinzaTools",
+      "url": "https://vinzatools.com",
+      "description": "Free online toolkit with AI background remover, PDF merge, compress, convert, YouTube downloader, image compressor, QR code generator, and 90+ tools.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://vinzatools.com/#/tools?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "VinzaTools",
+      "url": "https://vinzatools.com",
+      "description": "VinzaTools provides 90+ free online tools for file processing, image editing, PDF workflows, and media downloads."
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "VinzaTools — Free Online Tools",
+      "description": "90+ free online tools including background remover, PDF converter, video downloader, image compressor, and more.",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "AI Background Remover",
+          "description": "Remove image background automatically using AI — free, instant, no signup.",
+          "url": "https://vinzatools.com/#/tools?t=bg-remover"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "PDF Merge — Combine PDF Files",
+          "description": "Merge multiple PDF files into one document quickly and for free.",
+          "url": "https://vinzatools.com/#/tools?t=pdf-merge"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "PDF Compress — Reduce PDF Size",
+          "description": "Compress PDF files to smaller size while keeping quality intact.",
+          "url": "https://vinzatools.com/#/tools?t=pdf-compress"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "PDF to Word Converter",
+          "description": "Convert PDF documents to editable Word (DOCX) files instantly.",
+          "url": "https://vinzatools.com/#/tools?t=pdf-to-word"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "name": "YouTube Video Downloader",
+          "description": "Download YouTube videos and audio for free — MP4 and MP3 support.",
+          "url": "https://vinzatools.com/#/tools?t=media-youtube"
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "name": "TikTok Video Downloader",
+          "description": "Download TikTok videos without watermark for free.",
+          "url": "https://vinzatools.com/#/tools?t=media-tiktok"
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "name": "Image Compressor",
+          "description": "Compress JPG, PNG, and WebP images for faster websites.",
+          "url": "https://vinzatools.com/#/tools?t=image-compressor"
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "name": "QR Code Generator",
+          "description": "Create custom QR codes for links, contacts, and campaigns — free.",
+          "url": "https://vinzatools.com/#/tools?t=qr-code-generator"
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Static content for search engine crawlers — hidden once React loads -->
+      <noscript>
+        <style>
+          .seo-fallback { font-family: system-ui, sans-serif; max-width: 900px; margin: 0 auto; padding: 24px; }
+          .seo-fallback h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+          .seo-fallback p { color: #555; }
+          .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 24px; }
+          .tool-card { border: 1px solid #ddd; border-radius: 8px; padding: 16px; }
+          .tool-card h3 { margin: 0 0 6px; }
+          .tool-card p { margin: 0; font-size: 0.9rem; color: #666; }
+        </style>
+        <div class="seo-fallback">
+          <h1>VinzaTools — Free Online File Toolkit</h1>
+          <p>90+ free browser-based tools for background removal, PDF processing, video downloads, image editing, and developer utilities. No signup required.</p>
+          <div class="tool-grid">
+            <div class="tool-card"><h3>AI Background Remover</h3><p>Remove image backgrounds instantly using AI. Free, private, no upload limit.</p></div>
+            <div class="tool-card"><h3>PDF Merge</h3><p>Combine multiple PDF files into a single document in seconds.</p></div>
+            <div class="tool-card"><h3>Compress PDF</h3><p>Reduce PDF file size while keeping quality for easy sharing.</p></div>
+            <div class="tool-card"><h3>PDF to Word</h3><p>Convert PDF to editable Word DOCX format instantly.</p></div>
+            <div class="tool-card"><h3>YouTube Downloader</h3><p>Download YouTube videos and audio as MP4 or MP3 for free.</p></div>
+            <div class="tool-card"><h3>TikTok Downloader</h3><p>Save TikTok videos without watermark — fast and free.</p></div>
+            <div class="tool-card"><h3>Instagram Downloader</h3><p>Download Instagram reels, photos, and videos.</p></div>
+            <div class="tool-card"><h3>Image Compressor</h3><p>Compress JPG, PNG, and WebP images for fast websites.</p></div>
+            <div class="tool-card"><h3>QR Code Generator</h3><p>Generate branded QR codes for links, contact cards, and campaigns.</p></div>
+            <div class="tool-card"><h3>Image Converter</h3><p>Convert between WebP, JPG, PNG, HEIC, and more.</p></div>
+            <div class="tool-card"><h3>Resume Builder</h3><p>Build ATS-ready professional resumes with modern templates.</p></div>
+            <div class="tool-card"><h3>Word & Character Counter</h3><p>Count words, characters, and sentences instantly.</p></div>
+          </div>
+          <p style="margin-top:24px">Enable JavaScript to use the full VinzaTools workspace with all 90+ tools.</p>
+        </div>
+      </noscript>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-
