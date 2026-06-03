@@ -280,11 +280,12 @@ export const ToolsPage = ({
                 New Tools Added
               </div>
               <h3 className="text-2xl font-black text-white">
-                {visibleNewTools.length} fresh tools from your screenshot reference are now in the app
+                {visibleNewTools.length} new tools just added to VinzaTools
               </h3>
               <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-300">
-                Ab user ko clear dikh raha hai ke new tools add ho chuke hain. In cards par
-                `New` badge bhi hai, aur aap category filter ke through unko easily spot kar sakte ho.
+                From QR Code Generator and Image Compressor to DB Viewer and Shopify Helper — explore
+                the latest additions. Look for the <span className="font-bold text-emerald-300">New</span> badge
+                on each card, or filter by category to find them quickly.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -415,6 +416,26 @@ export const ToolsPage = ({
                 {activeToolName || 'Tool'}
               </h2>
             </div>
+          </div>
+
+          {/* Trust Badges */}
+          <div className="flex flex-wrap gap-3 border-b border-white/5 px-6 py-3">
+            {[
+              '100% Free',
+              'No Signup Required',
+              'No Watermark',
+              'Works in Browser',
+            ].map((badge) => (
+              <span
+                key={badge}
+                className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-300"
+              >
+                <svg viewBox="0 0 12 12" fill="currentColor" className="h-3 w-3 shrink-0">
+                  <path d="M10.28 2.28a.75.75 0 0 0-1.06 0L4.5 7 2.78 5.28a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.06 0l5.25-5.25a.75.75 0 0 0 0-1.06Z" />
+                </svg>
+                {badge}
+              </span>
+            ))}
           </div>
 
           {/* Tool Content */}

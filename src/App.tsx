@@ -17,6 +17,8 @@ import rizwanImage from './assets/images/team-images/rizwan.webp';
 import type { ToolCategory, PageKey, ContactTab, ToolContext, Tool } from './types/app';
 import { SiteLayout } from './layouts/SiteLayout';
 import { BrandMark } from './components/BrandMark';
+import { CookieConsent } from './components/CookieConsent';
+import { ScrollToTop } from './components/ScrollToTop';
 import { apiFetch } from './api';
 import { trackGaEvent } from './lib/analytics';
 
@@ -1192,6 +1194,7 @@ export default function App() {
   }
 
   return (
+    <>
     <SiteLayout
       page={page}
       setPage={setPageWithRoute}
@@ -1245,8 +1248,12 @@ export default function App() {
         {page === 'cookies' && <CookiePolicyPage />}
       </Suspense>
     </SiteLayout>
+    <ScrollToTop />
+    <CookieConsent />
+    </>
   );
 }
+
 
 
 
