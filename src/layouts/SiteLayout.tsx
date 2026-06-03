@@ -5,7 +5,9 @@ import {
   ChevronDown,
   Heart,
   Mail,
+  Menu,
   Sparkles,
+  X,
 } from 'lucide-react';
 import { BrandMark } from '../components/BrandMark';
 import { trackGaEvent } from '../lib/analytics';
@@ -45,6 +47,7 @@ export const SiteLayout = ({
 }: SiteLayoutProps) => {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [openFooterSection, setOpenFooterSection] = useState<string | null>('tools');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuShellRef = useRef<HTMLDivElement | null>(null);
 
   const toolMap = useMemo(
@@ -177,6 +180,7 @@ export const SiteLayout = ({
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setOpenMenu(null);
+        setMobileMenuOpen(false);
       }
     };
 
@@ -320,6 +324,17 @@ export const SiteLayout = ({
               Request Tool
             </button>
           </div>
+
+          {/* Hamburger — mobile only */}
+          <button
+            type="button"
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileMenuOpen}
+            onClick={() => setMobileMenuOpen((v) => !v)}
+            className="vinza-button md:hidden flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white transition hover:bg-white/10"
+          >
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
 
         {activeMenu && (
@@ -389,25 +404,87 @@ export const SiteLayout = ({
           </div>
         )}
 
-        <div className="border-t border-white/5 bg-[#0f0a0a]/85 px-4 py-3 xl:hidden">
-          <div className="mx-auto flex max-w-7xl items-center gap-2 overflow-x-auto app-scrollbar">
-            {[primaryLink, ...secondaryLinks].map((item) => (
-              <button
-                key={item.key}
-                type="button"
-                onClick={() => setPage(item.key)}
-                className={`vinza-button cursor-pointer whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all ${
-                  page === item.key
-                    ? 'bg-rose-500 text-white'
-                    : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
+        {/* Mobile quick-tab strip (hidden when hamburger menu is open) */}
+        {!mobileMenuOpen && (
+          <div className="border-t border-white/5 bg-[#0f0a0a]/85 px-4 py-3 xl:hidden">
+            <div className="mx-auto flex max-w-7xl items-center gap-2 overflow-x-auto app-scrollbar">
+              {[primaryLink, ...secondaryLinks].map((item) => (
+                <button
+                  key={item.key}
+                  type="button"
+                  onClick={() => setPage(item.key)}
+                  className={`vinza-button cursor-pointer whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                    page === item.key
+                      ? 'bg-rose-500 text-white'
+                      : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
+
+      {/* Full-screen mobile slide-in menu */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-40 md:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          <nav
+            className="absolute left-0 right-0 top-0 bg-[#0f0a0a] px-4 pb-8 pt-20 shadow-[0_20px_60px_rgba(0,0,0,0.6)]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex flex-col gap-1">
+              {[primaryLink, ...secondaryLinks].map((item) => (
+                <button
+                  key={item.key}
+                  type="button"
+                  onClick={() => {
+                    setPage(item.key);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`vinza-button cursor-pointer w-full rounded-2xl px-5 py-4 text-left text-base font-semibold transition-all ${
+                    page === item.key
+                      ? 'bg-rose-500/15 text-rose-300 border border-rose-500/30'
+                      : 'text-slate-300 hover:bg-white/5 hover:text-white border border-transparent'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-6 flex flex-col gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setPage('tools');
+                  setMobileMenuOpen(false);
+                }}
+                className="vinza-button cursor-pointer flex items-center justify-center gap-2 rounded-2xl bg-white/5 border border-white/10 py-4 text-base font-semibold text-white transition hover:bg-white/10"
+              >
+                <Sparkles size={16} className="text-rose-300" />
+                Browse All 94+ Tools
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setPage('contact');
+                  setMobileMenuOpen(false);
+                  trackGaEvent('request_tool_click', { location: 'mobile_menu' });
+                }}
+                className="vinza-button cursor-pointer flex items-center justify-center rounded-2xl bg-rose-500 py-4 text-base font-semibold text-white shadow-lg shadow-rose-500/25 transition hover:bg-rose-600"
+              >
+                Request a Tool
+              </button>
+            </div>
+          </nav>
+        </div>
+      )}
 
       <main
         id="main-content"

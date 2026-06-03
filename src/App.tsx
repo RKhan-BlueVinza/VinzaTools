@@ -1116,11 +1116,11 @@ export default function App() {
     setOg('og:type', 'website');
     setOg('og:url', canonicalUrl);
     setOg('og:site_name', 'VinzaTools');
-    setOg('og:image', 'https://www.vinzatools.com/assets/images/toolora-logo.png');
+    setOg('og:image', 'https://www.vinzatools.com/assets/images/vinzatools-og.png');
     setMeta('twitter:card', 'summary_large_image');
     setMeta('twitter:title', title);
     setMeta('twitter:description', description);
-    setMeta('twitter:image', 'https://www.vinzatools.com/assets/images/toolora-logo.png');
+    setMeta('twitter:image', 'https://www.vinzatools.com/assets/images/vinzatools-og.png');
 
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (!canonical) {

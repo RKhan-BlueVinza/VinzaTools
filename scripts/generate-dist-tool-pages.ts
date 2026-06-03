@@ -38,6 +38,47 @@ const removeMetaByProp = (html: string, prop: string) =>
 const removeLink = (html: string, rel: string) =>
   html.replace(new RegExp(`<link [^>]*rel=["']${rel}["'][^>]*>\\s*`, 'gi'), '');
 
+// Keyword-rich SEO titles for top tools. Pattern: [Action Keyword] Free Online – [Benefit] | VinzaTools
+const RICH_TITLES: Record<string, string> = {
+  'bg-remover': 'AI Background Remover – Remove BG Free Online | VinzaTools',
+  'media-youtube': 'Free YouTube Video Downloader – MP4 & MP3 | VinzaTools',
+  'pdf-to-word': 'PDF to Word Converter – Free & Accurate Online | VinzaTools',
+  'media-tiktok': 'Free TikTok Downloader – No Watermark | VinzaTools',
+  'media-instagram': 'Instagram Downloader – Photos & Reels Free | VinzaTools',
+  'media-facebook': 'Facebook Video Downloader – Free & No Watermark | VinzaTools',
+  'image-compressor': 'Free Image Compressor – Reduce Size Online | VinzaTools',
+  'pdf-merge': 'Merge PDF Files Free Online – Combine PDFs | VinzaTools',
+  'pdf-compress': 'Compress PDF Free Online – Reduce File Size | VinzaTools',
+  'jpg-to-pdf': 'JPG to PDF Converter – Free & Fast Online | VinzaTools',
+  'pdf-to-jpg': 'PDF to JPG Converter – Free & High Quality | VinzaTools',
+  'resume-builder': 'Free Resume Builder – ATS-Ready Templates | VinzaTools',
+  'qr-code-generator': 'Free QR Code Generator – Custom & Branded | VinzaTools',
+  'word-to-pdf': 'Word to PDF Converter – Free Online Converter | VinzaTools',
+  'pdf-split': 'Split PDF Free Online – Extract Pages Instantly | VinzaTools',
+  'image-converter': 'Free Image Converter – JPG PNG WEBP Online | VinzaTools',
+  'mp4-to-mp3': 'MP4 to MP3 Converter – Extract Audio Free | VinzaTools',
+  'video-to-gif': 'Video to GIF Converter – Free Online Tool | VinzaTools',
+  'password-generator': 'Free Password Generator – Strong & Secure | VinzaTools',
+  'color-palette-generator': 'Color Palette Generator – Free Brand Colors | VinzaTools',
+  'crop-image': 'Crop Image Free Online – No Signup Required | VinzaTools',
+  'resize-image': 'Resize Image Free Online – Custom Dimensions | VinzaTools',
+  'ppt-to-pdf': 'PowerPoint to PDF – Free Online Converter | VinzaTools',
+  'pdf-to-ppt': 'PDF to PowerPoint – Free Online Converter | VinzaTools',
+  'pdf-to-excel': 'PDF to Excel – Free Online Converter | VinzaTools',
+  'excel-to-pdf': 'Excel to PDF – Free Online Converter | VinzaTools',
+  'html-to-pdf': 'HTML to PDF Converter – Free Online Tool | VinzaTools',
+  'edit-pdf': 'Edit PDF Free Online – No Signup Needed | VinzaTools',
+  'protect-pdf': 'Protect PDF with Password – Free Online | VinzaTools',
+  'unlock-pdf': 'Unlock PDF Free Online – Remove Password | VinzaTools',
+  'sign-pdf': 'Sign PDF Free Online – Add Signature Easily | VinzaTools',
+  'slug-generator': 'URL Slug Generator – Free SEO-Friendly Slugs | VinzaTools',
+  'text-counter': 'Word & Character Counter – Free Online Tool | VinzaTools',
+  'case-converter': 'Text Case Converter – Free Online Tool | VinzaTools',
+  'video-converter': 'Free Video Converter – MP4 MOV WEBM Online | VinzaTools',
+  'audio-converter': 'Free Audio Converter – MP3 WAV OGG Online | VinzaTools',
+  'gif-maker': 'Free GIF Maker – Create Animated GIFs Online | VinzaTools',
+};
+
 // Rich descriptions for high-traffic tools (keep under 155 chars).
 const RICH_DESCRIPTIONS: Record<string, string> = {
   'bg-remover': 'Free AI background remover — upload any photo and get a transparent PNG in seconds. No Photoshop, no signup, works on any image.',
@@ -135,18 +176,28 @@ const buildLdJson = (toolName: string, metaDesc: string, canonical: string): str
     publisher: { '@type': 'Organization', name: 'VinzaTools', url: SITE },
   });
 
-// Short how-to blurb for noscript content per category.
+// How-to steps per category (shown in noscript for crawlers).
 const HOW_TO_USE: Record<string, string> = {
-  pdf: 'Upload your PDF file, configure options if needed, then click Process. Results download instantly — no upload to external servers.',
-  image: 'Upload your image, set options, then click Process. Preview the result and download the converted file instantly.',
-  media: 'Paste the video URL, click Download, and save the file to your device. No account needed.',
-  creative: 'Fill in your content or upload assets, then export your design as PNG or PDF in one click.',
-  text: 'Paste or type your text and see results instantly. Copy or download your processed text right away.',
-  developer: 'Paste your input data, configure options, then click Process. Results appear instantly and can be copied or downloaded.',
+  pdf: 'Upload your PDF file using the upload button or drag-and-drop area. Configure any options needed for your task. Click the Process button. Your result downloads automatically — no software installation, no account required.',
+  image: 'Upload your image using the upload button or drag and drop it into the tool. Set your preferred options such as format, quality, or dimensions. Click Process and preview the result. Download your converted image instantly.',
+  media: 'Copy the video URL from YouTube, TikTok, Instagram, or Facebook. Paste it into the URL field. Choose your preferred format (MP4, MP3, or HD video). Click Download and save the file to your device. No account or app needed.',
+  creative: 'Fill in your content details or upload your assets into the editor. Customize the design using available options. Click Export to save your file as PNG, PDF, or your preferred format.',
+  text: 'Paste or type your text into the input box. The tool processes your text instantly and shows results in real time. Copy the result or download it as a file.',
+  developer: 'Paste your input data (code, URL, or text) into the tool. Configure any available options. Click Process to see the result instantly. Copy the output or download it directly.',
+};
+
+// Key benefits per category (shown as bullet points in noscript).
+const KEY_FEATURES: Record<string, string[]> = {
+  pdf: ['Works on all PDF types — scanned or digital', 'No file size restrictions for common operations', 'Your files are processed securely and not stored', 'Download results instantly after processing'],
+  image: ['Supports JPG, PNG, WEBP, HEIC, and more formats', 'Process images without installing any software', 'Preview before downloading', 'Works on all devices including mobile'],
+  media: ['Download in HD quality when available', 'No watermark on downloaded files', 'Supports YouTube, TikTok, Instagram, and Facebook', 'Works in any browser, no app installation needed'],
+  creative: ['Professional-quality output in PDF or PNG', 'Multiple templates and layout options', 'No design experience required', 'Download and use for any purpose'],
+  text: ['Instant results as you type', 'Supports long-form text and documents', 'No word count limits', 'Copy or download results easily'],
+  developer: ['Handles large inputs efficiently', 'Clean formatted output ready to use', 'No registration or API key needed', 'Works across all major browsers'],
 };
 
 const buildToolPage = (toolId: string, toolName: string, description: string, category: string, relatedTools: Array<{ id: string; name: string }>): string => {
-  const title = `${toolName} | VinzaTools`;
+  const title = RICH_TITLES[toolId] || `${toolName} Free Online | VinzaTools`;
   const canonical = `${SITE}/tools/${encodeURIComponent(toolId)}`;
   const rawDesc = RICH_DESCRIPTIONS[toolId] ||
     `Free online ${toolName.toLowerCase()} on VinzaTools. ${description.trimEnd().replace(/\.$/, '')} — no signup required, instant download.`;
@@ -182,7 +233,7 @@ const buildToolPage = (toolId: string, toolName: string, description: string, ca
   // Replace title.
   html = html.replace(/<title>.*?<\/title>/s, `<title>${escapeHtml(title)}</title>`);
 
-  const ogImg = `${SITE}/assets/images/toolora-logo.png`;
+  const ogImg = `${SITE}/assets/images/vinzatools-og.png`;
   const keywords = buildKeywords(toolId, toolName, category);
 
   const headBlock = [
@@ -208,17 +259,25 @@ const buildToolPage = (toolId: string, toolName: string, description: string, ca
     ? `<p style="margin-top:20px;"><strong>Related tools:</strong><br style="margin-bottom:6px;">${relatedTools.map(t => `<a href="${SITE}/tools/${encodeURIComponent(t.id)}" style="color:#e11d48;margin-right:14px;display:inline-block;margin-top:4px;">${escapeHtml(t.name)}</a>`).join('')}</p>`
     : '';
 
+  const keyFeatures = KEY_FEATURES[category] || ['Free to use — no signup required', 'Works in any browser', 'Instant results with no waiting', 'Secure processing — files are not stored'];
+  const featureBulletsHtml = `<ul style="color:#444;padding-left:20px;margin-bottom:16px;">${keyFeatures.map(f => `<li style="margin-bottom:4px;">${escapeHtml(f)}</li>`).join('')}</ul>`;
+
   const noscript = [
     `<noscript>`,
     `<main style="max-width:760px;margin:40px auto;font-family:Arial,sans-serif;line-height:1.7;padding:0 16px;">`,
     `<nav style="font-size:13px;margin-bottom:16px;"><a href="${SITE}" style="color:#e11d48;text-decoration:none;">VinzaTools</a> &rsaquo; <a href="${SITE}/tools" style="color:#e11d48;text-decoration:none;">Tools</a> &rsaquo; ${escapeHtml(toolName)}</nav>`,
     `<h1 style="margin-bottom:8px;">${escapeHtml(toolName)}</h1>`,
     `<p style="color:#444;margin-bottom:16px;">${escapeHtml(metaDesc)}</p>`,
-    `<h2 style="font-size:1rem;margin-bottom:6px;">How to use</h2>`,
+    `<p style="color:#555;font-size:0.93rem;margin-bottom:16px;">VinzaTools is a free online tools platform with 94+ tools for PDF editing, image processing, video downloading, and more. This tool — <strong>${escapeHtml(toolName)}</strong> — is completely free to use, requires no account, and delivers instant results directly in your browser.</p>`,
+    `<h2 style="font-size:1.1rem;margin-bottom:8px;">How to use ${escapeHtml(toolName)}</h2>`,
     `<p style="color:#444;margin-bottom:16px;">${escapeHtml(howToUse)}</p>`,
-    `<p><strong>Open tool:</strong> <a href="${canonical}" style="color:#e11d48;">${canonical}</a></p>`,
+    `<h2 style="font-size:1.1rem;margin-bottom:8px;">Key features</h2>`,
+    featureBulletsHtml,
+    `<h2 style="font-size:1.1rem;margin-bottom:8px;">Why use VinzaTools?</h2>`,
+    `<p style="color:#444;margin-bottom:16px;">VinzaTools offers 94+ free online tools with no signup, no watermarks, and no hidden fees. Every tool works directly in your browser — no software to install, no file uploads to third-party servers. Whether you need to edit a PDF, compress an image, or download a video, VinzaTools has a fast and free solution.</p>`,
+    `<p><strong>Open this tool:</strong> <a href="${canonical}" style="color:#e11d48;">${canonical}</a></p>`,
     relatedLinksHtml,
-    `<p><a href="${SITE}/tools" style="color:#e11d48;">Browse all VinzaTools &rarr;</a></p>`,
+    `<p style="margin-top:16px;"><a href="${SITE}/tools" style="color:#e11d48;">Browse all 94+ free tools on VinzaTools &rarr;</a></p>`,
     `</main>`,
     `</noscript>`,
   ].join('\n');
