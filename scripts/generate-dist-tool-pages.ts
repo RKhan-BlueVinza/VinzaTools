@@ -40,15 +40,15 @@ const removeLink = (html: string, rel: string) =>
 
 // Rich descriptions for high-traffic tools (keep under 155 chars).
 const RICH_DESCRIPTIONS: Record<string, string> = {
-  'bg-remover': 'Remove image backgrounds instantly with AI. Upload any photo and get a clean transparent PNG in seconds. Free, no signup required.',
-  'pdf-to-word': 'Convert PDF to editable Word document online. Upload your PDF and download a clean DOCX file instantly. Free PDF to Word, no signup.',
-  'media-youtube': 'Download YouTube videos and audio free. Save as MP4 or extract MP3 — no watermark, no signup required on VinzaTools.',
-  'media-tiktok': 'Download TikTok videos without watermark for free. Save reels and clips instantly — no login, clean HD download on VinzaTools.',
-  'media-instagram': 'Download Instagram reels, videos, and photos free. Save content without an account — fast, clean download on VinzaTools.',
-  'media-facebook': 'Download Facebook videos online free. Save public video content fast and clean — no watermark, no signup on VinzaTools.',
+  'bg-remover': 'Free AI background remover — upload any photo and get a transparent PNG in seconds. No Photoshop, no signup, works on any image.',
+  'pdf-to-word': 'Free PDF to Word converter online. Upload PDF, download editable DOCX instantly — accurate formatting, no signup, no watermark.',
+  'media-youtube': 'Free YouTube video downloader — save MP4 in HD or extract MP3 audio. No account needed, no watermark, instant download online.',
+  'media-tiktok': 'Download TikTok videos without watermark free. Save HD reels and clips in seconds — no login, no app required on VinzaTools.',
+  'media-instagram': 'Download Instagram reels, videos, and photos free. No account needed — fast, watermark-free download on VinzaTools.',
+  'media-facebook': 'Download Facebook videos free — save public video content in HD with no watermark and no signup required on VinzaTools.',
   'pdf-merge': 'Merge multiple PDF files into one document online. Combine PDFs in any order and download instantly — free, no signup needed.',
   'pdf-compress': 'Compress PDF file size online while keeping quality. Reduce large PDFs for email or sharing — free PDF compressor, instant download.',
-  'image-compressor': 'Compress images online without losing quality. Reduce JPG, PNG, and WEBP sizes for faster websites — free, no signup, instant download.',
+  'image-compressor': 'Free image compressor online — reduce JPG, PNG, and WEBP file size without losing quality. Instant download, no signup, no upload limit.',
   'qr-code-generator': 'Create custom QR codes for URLs, contacts, and campaigns online. Branded QR codes with logo support — free, instant PNG download.',
   'resume-builder': 'Build a professional ATS-ready resume with modern templates. Download as PDF or Word — free resume builder online, no signup.',
   'word-to-pdf': 'Convert Word document to PDF online for free. Upload DOCX and download a clean PDF instantly — no software, no signup on VinzaTools.',

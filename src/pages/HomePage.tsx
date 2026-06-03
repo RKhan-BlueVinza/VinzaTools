@@ -141,12 +141,12 @@ export const HomePage = ({
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Left Content */}
             <div className="space-y-8">
-              <h1 className="text-6xl lg:text-8xl font-black leading-[0.9] tracking-tighter">
+              <h1 className="text-5xl lg:text-7xl font-black leading-[0.95] tracking-tighter">
                 <span className="block text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-400">
-                  FILE
+                  Free Online
                 </span>
                 <span className="block text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-coral-500 to-orange-500 mt-2">
-                  MAGIC
+                  Tools
                 </span>
               </h1>
 
