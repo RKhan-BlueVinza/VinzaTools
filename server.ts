@@ -4317,8 +4317,15 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    app.use(express.static('dist'));
-    app.get('*', (req, res) => {
+    // Return 404 for /cgi-bin paths — Google scans these but the route doesn't exist
+    app.get(['/cgi-bin', '/cgi-bin/*'], (_req, res) => {
+      res.status(404).type('text').send('Not Found');
+    });
+    // redirect:false prevents express from 301-redirecting /tools/foo → /tools/foo/
+    // That redirect causes a canonical URL mismatch in Google Search Console because
+    // the generated HTML canonicals omit the trailing slash.
+    app.use(express.static('dist', { redirect: false }));
+    app.get('*', (_req, res) => {
       res.sendFile(path.resolve('dist/index.html'));
     });
   }

@@ -145,7 +145,7 @@ const HOW_TO_USE: Record<string, string> = {
   developer: 'Paste your input data, configure options, then click Process. Results appear instantly and can be copied or downloaded.',
 };
 
-const buildToolPage = (toolId: string, toolName: string, description: string, category: string): string => {
+const buildToolPage = (toolId: string, toolName: string, description: string, category: string, relatedTools: Array<{ id: string; name: string }>): string => {
   const title = `${toolName} | VinzaTools`;
   const canonical = `${SITE}/tools/${encodeURIComponent(toolId)}`;
   const rawDesc = RICH_DESCRIPTIONS[toolId] ||
@@ -204,6 +204,10 @@ const buildToolPage = (toolId: string, toolName: string, description: string, ca
 
   // Rich noscript block — gives crawlers real readable content.
   const howToUse = HOW_TO_USE[category] || 'Open the tool, upload your file or enter your input, then click Process to get your result instantly.';
+  const relatedLinksHtml = relatedTools.length > 0
+    ? `<p style="margin-top:20px;"><strong>Related tools:</strong><br style="margin-bottom:6px;">${relatedTools.map(t => `<a href="${SITE}/tools/${encodeURIComponent(t.id)}" style="color:#e11d48;margin-right:14px;display:inline-block;margin-top:4px;">${escapeHtml(t.name)}</a>`).join('')}</p>`
+    : '';
+
   const noscript = [
     `<noscript>`,
     `<main style="max-width:760px;margin:40px auto;font-family:Arial,sans-serif;line-height:1.7;padding:0 16px;">`,
@@ -213,6 +217,7 @@ const buildToolPage = (toolId: string, toolName: string, description: string, ca
     `<h2 style="font-size:1rem;margin-bottom:6px;">How to use</h2>`,
     `<p style="color:#444;margin-bottom:16px;">${escapeHtml(howToUse)}</p>`,
     `<p><strong>Open tool:</strong> <a href="${canonical}" style="color:#e11d48;">${canonical}</a></p>`,
+    relatedLinksHtml,
     `<p><a href="${SITE}/tools" style="color:#e11d48;">Browse all VinzaTools &rarr;</a></p>`,
     `</main>`,
     `</noscript>`,
@@ -229,7 +234,11 @@ for (const tool of INTERNAL_TOOLS) {
   const outDir = path.join(toolsRoot, tool.id);
   fs.mkdirSync(outDir, { recursive: true });
   const outPath = path.join(outDir, 'index.html');
-  fs.writeFileSync(outPath, buildToolPage(tool.id, tool.name, tool.description, tool.category), 'utf8');
+  const relatedTools = INTERNAL_TOOLS
+    .filter(t => t.category === tool.category && t.id !== tool.id)
+    .slice(0, 6)
+    .map(t => ({ id: t.id, name: t.name }));
+  fs.writeFileSync(outPath, buildToolPage(tool.id, tool.name, tool.description, tool.category, relatedTools), 'utf8');
 }
 
 console.log(`Generated ${INTERNAL_TOOLS.length} tool landing pages into dist/tools/<id>/index.html`);
