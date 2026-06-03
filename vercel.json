@@ -30,6 +30,7 @@
     }
   ],
   "routes": [
+    { "src": "/cgi-bin(.*)", "status": 404, "dest": "/index.html" },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
